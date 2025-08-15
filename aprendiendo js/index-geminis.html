@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Profesional</title>
+    <style>
+        /* Estilos generales */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Estilos del encabezado */
+        header {
+            background-color: #FFCF15;
+            color: #00477A;
+            padding: 1rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        /* Estilos del contenido principal */
+        main {
+            flex: 1;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .hero-section {
+            background-color: #fff;
+            padding: 3rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-section h2 {
+            color: #00477A;
+            margin-bottom: 1rem;
+        }
+
+        .hero-section p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Estilos del botón */
+        .btn {
+            background-color: #00477A;
+            color: #fff;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #002e4d;
+        }
+
+        /* Estilos del pie de página */
+        footer {
+            background-color: #00477A;
+            color: #FFCF15;
+            padding: 1rem 2rem;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        /* Media queries para responsividad */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            main {
+                padding: 1rem;
+            }
+
+            .hero-section {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Mi Página Profesional</h1>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <h2>Bienvenido a mi sitio</h2>
+            <p>Este es un ejemplo de una página web profesional, responsiva y con estilos limpios. Haz clic en el botón para ejecutar mi primer algoritmo.</p>
+            <button class="btn" onclick="mi_primer_algoritmo()">Ejecutar Algoritmo</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Mi Página Profesional. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        // Esta es la función que será llamada desde el botón.
+        // Aquí puedes definir tu "mi_primer_algoritmo" hasta que crees el archivo externo.
+        function mi_primer_algoritmo() {
+            alert("¡Hola! Has ejecutado mi primer algoritmo.");
+        }
+    </script>
+
+</body>
+</html>

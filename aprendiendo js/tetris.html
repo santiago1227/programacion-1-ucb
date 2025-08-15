@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris Clásico</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+
+        #game-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        #game-board {
+            display: grid;
+            grid-template-columns: repeat(10, 20px);
+            grid-template-rows: repeat(20, 20px);
+            border: 2px solid #ccc;
+            background-color: #000;
+        }
+
+        .cell {
+            width: 20px;
+            height: 20px;
+            background-color: #111;
+            border: 1px solid #333;
+            box-sizing: border-box;
+        }
+
+        .piece {
+            background-color: red; /* Color por defecto, se sobrescribe en JS */
+        }
+
+        #score-board {
+            width: 150px;
+            background-color: #222;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        #score, #level, #next-piece-container {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        #next-piece-board {
+            display: grid;
+            grid-template-columns: repeat(4, 15px);
+            grid-template-rows: repeat(4, 15px);
+            border: 1px solid #555;
+            background-color: #000;
+            margin: 10px auto;
+        }
+
+        #next-piece-board .cell {
+            width: 15px;
+            height: 15px;
+        }
+
+        #game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3em;
+            color: #ff0000;
+            text-shadow: 2px 2px 5px #000;
+            display: none;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-over">Game Over</div>
+
+    <div id="game-container">
+        <div id="game-board"></div>
+        <div id="score-board">
+            <h1>Tetris</h1>
+            <p>Puntuación: <span id="score">0</span></p>
+            <p>Nivel: <span id="level">1</span></p>
+            <div id="next-piece-container">
+                <p>Siguiente:</p>
+                <div id="next-piece-board"></div>
+            </div>
+            <p>Flechas: Mover</p>
+            <p>Espacio: Rotar</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const board = document.getElementById('game-board');
+            const scoreElement = document.getElementById('score');
+            const levelElement = document.getElementById('level');
+            const nextPieceBoard = document.getElementById('next-piece-board');
+            const gameOverElement = document.getElementById('game-over');
+
+            const COLS = 10;
+            const ROWS = 20;
+            const CELL_SIZE = 20;
+
+            let grid = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+            let currentPiece;
+            let nextPiece;
+            let score = 0;
+            let level = 1;
+            let dropInterval = 1000;
+            let gameLoop;
+
+            const PIECES = [
+                { shape: [[1, 1], [1, 1]], color: '#FFD700' }, // O
+                { shape: [[0, 1, 0], [1, 1, 1], [0, 0, 0]], color: '#8A2BE2' }, // T
+                { shape: [[1, 1, 0], [0, 1, 1], [0, 0, 0]], color: '#32CD32' }, // S
+                { shape: [[0, 1, 1], [1, 1, 0], [0, 0, 0]], color: '#FF4500' }, // Z
+                { shape: [[1, 0, 0], [1, 1, 1], [0, 0, 0]], color: '#1E90FF' }, // J
+                { shape: [[0, 0, 1], [1, 1, 1], [0, 0, 0]], color: '#FFA500' }, // L
+                { shape: [[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]], color: '#00CED1' } // I
+            ];
+
+            function createBoard() {
+                board.innerHTML = '';
+                for (let r = 0; r < ROWS; r++) {
+                    for (let c = 0; c < COLS; c++) {
+                        const cell = document.createElement('div');
+                        cell.classList.add('cell');
+                        board.appendChild(cell);
+                    }
+                }
+            }
+
+            function draw() {
+                const allCells = board.querySelectorAll('.cell');
+                for (let r = 0; r < ROWS; r++) {
+                    for (let c = 0; c < COLS; c++) {
+                        const cellIndex = r * COLS + c;
+                        const cell = allCells[cellIndex];
+                        if (grid[r][c] !== 0) {
+                            cell.style.backgroundColor = grid[r][c];
+                            cell.classList.add('piece');
+                        } else {
+                            cell.style.backgroundColor = '#111';
+                            cell.classList.remove('piece');
+                        }
+                    }
+                }
+            }
+
+            function generatePiece() {
+                const randomPiece = PIECES[Math.floor(Math.random() * PIECES.length)];
+                return {
+                    shape: randomPiece.shape,
+                    color: randomPiece.color,
+                    x: Math.floor((COLS - randomPiece.shape[0].length) / 2),
+                    y: 0
+                };
+            }
+
+            function drawNextPiece() {
+                nextPieceBoard.innerHTML = '';
+                const nextPieceShape = nextPiece.shape;
+                const size = nextPieceShape.length;
+                nextPieceBoard.style.gridTemplateColumns = `repeat(${size}, 15px)`;
+                nextPieceBoard.style.gridTemplateRows = `repeat(${size}, 15px)`;
+
+                for (let r = 0; r < size; r++) {
+                    for (let c = 0; c < size; c++) {
+                        const cell = document.createElement('div');
+                        cell.classList.add('cell');
+                        if (nextPieceShape[r][c] === 1) {
+                            cell.style.backgroundColor = nextPiece.color;
+                            cell.classList.add('piece');
+                        }
+                        nextPieceBoard.appendChild(cell);
+                    }
+                }
+            }
+
+            function checkCollision(piece, x, y) {
+                const shape = piece.shape;
+                for (let r = 0; r < shape.length; r++) {
+                    for (let c = 0; c < shape[0].length; c++) {
+                        if (shape[r][c] === 1) {
+                            const newX = x + c;
+                            const newY = y + r;
+                            if (newX < 0 || newX >= COLS || newY >= ROWS || (newY >= 0 && grid[newY][newX] !== 0)) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                return false;
+            }
+
+            function mergePiece() {
+                const shape = currentPiece.shape;
+                for (let r = 0; r < shape.length; r++) {
+                    for (let c = 0; c < shape[0].length; c++) {
+                        if (shape[r][c] === 1) {
+                            const newY = currentPiece.y + r;
+                            const newX = currentPiece.x + c;
+                            if (newY >= 0) {
+                                grid[newY][newX] = currentPiece.color;
+                            }
+                        }
+                    }
+                }
+            }
+
+            function clearLines() {
+                let linesCleared = 0;
+                for (let r = ROWS - 1; r >= 0; r--) {
+                    if (grid[r].every(cell => cell !== 0)) {
+                        grid.splice(r, 1);
+                        grid.unshift(Array(COLS).fill(0));
+                        linesCleared++;
+                        r++;
+                    }
+                }
+                if (linesCleared > 0) {
+                    score += linesCleared * 100;
+                    scoreElement.innerText = score;
+                    if (score >= level * 500) {
+                        level++;
+                        levelElement.innerText = level;
+                        dropInterval *= 0.9;
+                        clearInterval(gameLoop);
+                        startGameLoop();
+                    }
+                }
+            }
+
+            function rotatePiece() {
+                const originalShape = currentPiece.shape;
+                const newShape = originalShape[0].map((_, index) => originalShape.map(row => row[index]).reverse());
+                const originalX = currentPiece.x;
+                currentPiece.shape = newShape;
+
+                if (checkCollision(currentPiece, currentPiece.x, currentPiece.y)) {
+                    currentPiece.shape = originalShape;
+                    currentPiece.x = originalX;
+                }
+            }
+
+            function movePiece(dir) {
+                if (!checkCollision(currentPiece, currentPiece.x + dir, currentPiece.y)) {
+                    currentPiece.x += dir;
+                }
+            }
+
+            function dropPiece() {
+                if (!checkCollision(currentPiece, currentPiece.x, currentPiece.y + 1)) {
+                    currentPiece.y++;
+                } else {
+                    mergePiece();
+                    clearLines();
+                    spawnNewPiece();
+                    if (checkCollision(currentPiece, currentPiece.x, currentPiece.y)) {
+                        gameOver();
+                    }
+                }
+            }
+
+            function drawPiece() {
+                const shape = currentPiece.shape;
+                for (let r = 0; r < shape.length; r++) {
+                    for (let c = 0; c < shape[0].length; c++) {
+                        if (shape[r][c] === 1) {
+                            const newY = currentPiece.y + r;
+                            const newX = currentPiece.x + c;
+                            if (newY >= 0) {
+                                const cellIndex = newY * COLS + newX;
+                                const cell = board.querySelectorAll('.cell')[cellIndex];
+                                cell.style.backgroundColor = currentPiece.color;
+                                cell.classList.add('piece');
+                            }
+                        }
+                    }
+                }
+            }
+
+            function update() {
+                draw();
+                if (currentPiece) {
+                    dropPiece();
+                    drawPiece();
+                }
+            }
+
+            function spawnNewPiece() {
+                if (!nextPiece) {
+                    nextPiece = generatePiece();
+                }
+                currentPiece = nextPiece;
+                nextPiece = generatePiece();
+                drawNextPiece();
+            }
+            
+            function startGameLoop() {
+                gameLoop = setInterval(update, dropInterval);
+            }
+
+            function gameOver() {
+                clearInterval(gameLoop);
+                gameOverElement.style.display = 'block';
+            }
+
+            document.addEventListener('keydown', e => {
+                if (e.key === 'ArrowLeft') movePiece(-1);
+                if (e.key === 'ArrowRight') movePiece(1);
+                if (e.key === 'ArrowDown') update();
+                if (e.key === ' ') rotatePiece();
+            });
+
+            function init() {
+                createBoard();
+                spawnNewPiece();
+                startGameLoop();
+            }
+
+            init();
+        });
+    </script>
+</body>
+</html>
