@@ -1,0 +1,49 @@
+/* Fondo estilo camuflaje (color plano) */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #4B5320; /* Verde militar */
+    color: #fff;
+    padding: 20px;
+    margin: 0;
+}
+
+/* Encabezado */
+h2 {
+    color: #d4d4aa;
+}
+
+/* Estilo para el input */
+input[type="text"] {
+    background-color: #8A9A5B; /* Verde oliva claro */
+    color: #000;
+    border: 2px solid #556B2F;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    width: 250px;
+    margin-right: 10px;
+}
+
+/* Estilo para el botón */
+button {
+    background-color: #556B2F; /* Verde oliva oscuro */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #6B8E23; /* Verde camuflaje claro */
+}
+
+/* Resultado */
+#resultado {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 18px;
+    color: #F0E68C; /* Amarillo caqui */
+}
