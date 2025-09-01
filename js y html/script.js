@@ -17,7 +17,6 @@
          lista.push(valoraleatorio);
          resultado.textcontent = lista.toString();
 
-       } 
 
        // crear nuevo boton
         const nuevoboton = document.createElement("button")
@@ -25,4 +24,20 @@
         nuevoboton.textcontent = valoraleatorio;
         
       //agregar al contenedor
-      resultado.appendchild
+      resultado.appendchild(nuevoboton);
+
+      // forzar animacion css con pequeño retraso
+      settimeout(() => {
+        nuevoboton.classList.add("visible");
+      }, 10)
+    }
+    
+    function eliminarlista(){
+      // el valor del elemento (pedir el input al usuario)
+      const input = document.getElementById8("input").value;
+
+      alert(input)
+      
+      // eliminar el elemento y si hay repetidor igual eliminar
+      //actualizar la lista
+    }
