@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visualizador de Matriz</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      height: 100vh;
+    }
+    .container {
+      display: flex;
+      width: 100%;
+    }
+    .sidebar {
+      width: 280px;
+      background: #74ACDF; /* Celeste argentino */
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      overflow-y: auto;
+    }
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: #FFD700; /* Dorado */
+    }
+    .sidebar button {
+      background: #ffffff; /* Blanco */
+      border: 2px solid #FFD700; /* Dorado */
+      color: #000;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    .sidebar button:hover {
+      background: #FFD700; /* Dorado al pasar */
+      color: #000;
+    }
+    .canvas-area {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: white;
+    }
+    canvas {
+      background: #eee;
+      border: 4px solid #74ACDF; /* Marco celeste */
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>Ejercicios</h2>
+      <button onclick="ejercicio1()">Ejercicio 1</button>
+      <button onclick="ejercicio2()">Ejercicio 2</button>
+      <button onclick="ejercicio3()">Ejercicio 3</button>
+      <button onclick="ejercicio4()">Ejercicio 4</button>
+      <button onclick="ejercicio5()">Ejercicio 5</button>
+      <button onclick="ejercicio6()">Ejercicio 6</button>
+      <button onclick="ejercicio7()">Ejercicio 7</button>
+      <button onclick="ejercicio8()">Ejercicio 8</button>
+      <button onclick="ejercicio9()">Ejercicio 9</button>
+      <button onclick="ejercicio10()">Ejercicio 10</button>
+      <button onclick="ejercicio11()">Ejercicio 11</button>
+      <button onclick="ejercicio12()">Ejercicio 12</button>
+      <button onclick="ejercicio13()">Ejercicio 13</button>
+      <button onclick="ejercicio14()">Ejercicio 14</button>
+      <button onclick="ejercicio15()">Ejercicio 15</button>
+      <button onclick="ejercicio16()">Ejercicio 16</button>
+      <button onclick="ejercicio17()">Ejercicio 17</button>
+      <button onclick="ejercicio18()">Ejercicio 18</button>
+      <button onclick="ejercicio19()">Ejercicio 19</button>
+      <button onclick="ejercicio20()">Ejercicio 20</button>
+      <button onclick="ejercicio21()">Ejercicio 21</button>
+      <button onclick="ejercicio22()">Ejercicio 22</button>
+      <hr>
+      <button onclick="limpiarMatriz()">🧹 Limpiar</button>
+    </aside>
+
+    <main class="canvas-area">
+      <canvas id="matrixCanvas" width="400" height="400"></canvas>
+    </main>
+  </div>
+
+  <!-- ✅ Ahora apunta al archivo correcto -->
+  <script src="matrix.js"></script>
+</body>
+</html>
